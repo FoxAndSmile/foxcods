@@ -1,0 +1,40 @@
+# local profile
+server:
+    port: 8080
+    context-path:
+
+# Error 자동 페이지 이동 해제
+    error:
+        whitelabel:
+            enabled: false
+
+# spring 설정
+spring:
+
+# HTTP
+    http:
+# File Size
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
+# encoding (HttpEncodingProperties)
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+# thymeleaf
+    thymeleaf:
+        cache: false
+        enabled: true
+        mode: LEGACYHTML5
+        prefix: /WEB-INF/view/
+        suffix: .html
+
+#logging 설정
+logging:
+    config:
+        classpath: logback-spring.xml
+
+# file upload 설정
+file:
+    rootpath: C:\attachfile
