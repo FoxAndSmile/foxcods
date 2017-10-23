@@ -1,13 +1,12 @@
-package com.foxandsmile.spring.fileuploaddownload;
+package com.foxcode.reactive;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
 @SpringBootApplication
-public class FileUploadDownloadApplication {
+public class ReactiveApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FileUploadDownloadApplication.class, args);
+		SpringApplication.run(ReactiveApplication.class, args);
 	}
 }
