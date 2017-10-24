@@ -1,6 +1,5 @@
-package com.foxcode.reactive.run;
+package com.foxcode.reactive.chapter1;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
