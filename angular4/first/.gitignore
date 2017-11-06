@@ -27,6 +27,3 @@ nbdist/
 mvnw.cmd
 .mvn/
 mvnw
-
-### NPM ###
-angular4/first/welcome-msg-app/node_modules

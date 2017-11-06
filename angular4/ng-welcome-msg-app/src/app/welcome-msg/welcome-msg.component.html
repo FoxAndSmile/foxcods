@@ -1,0 +1,14 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    {{welcomeMsg}}
+  </h1>
+  <h4>
+    <span>{{userName}}</span>님 왔어?
+  </h4>
+</div>
+<div class="contents">
+  <label for="user-name">사용자 이름:</label>
+  <input type="text" id="user-name" name="user-name" [(ngModel)]="userName" (ngModelChange)="onChange()"/>
+  <button class="button" (click)="showWelcomeMsg()">입력</button>
+</div>

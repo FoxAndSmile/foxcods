@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <span id="display-name"></span>님 환영.
+    <div class="contents">
+        <label for="user-name">사용자 이름</label>
+        <input type="text" name="user-name" id="user-name" />
+        <button type="button">입력</button>
+    </div>
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("button").on('click', function() {
+                var userName = $("#user-name").val();
+                $("#display-name").text(userName);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "welcome-msg-app",
+  "version": "1.0.0",
+  "description": "welcome이다.",
+  "main": "index.js",
+  "dependencies": {
+    "jquery": "^1.12.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "foxandsmile",
+  "license": "ISC"
+}
