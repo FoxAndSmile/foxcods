@@ -84,6 +84,8 @@ angular 4 프로젝트 생성 명령어
 * tsconfig.json : ts 컴파일 설정 파일
 * src/typing.d.ts : ts에서 사용할 타입 선언 정보 파일
 
+--prefix xxx 같은 옵션을 통해서 생성된 프로젝트안에서 컴포넌트를 생성시 selector에 자동으로 xxx접두어를 붙여주는 옵션, 왜 prefix를 넣냐면 다른 프로젝트의 컴포넌트나 지시자들과 이름이 충돌 날수 있기 때문에다.
+
 ### 3.1.2 ng serve
 
 ng serve는 소스를 Webpack을 통해서 번들링하고 실행 시키는 명령어
@@ -225,3 +227,155 @@ NgIf, NgFor, NgSwitch등등의 Dom요소를 추가하거나 삭제하는 등 Dom
 <ng-container *ngSwitchCase="'kkk'">kkk</ng-container>
 ...
 ```
+
+### 5.2.2 속성 지시자
+
+다수의 Class를 동적으로 추가하거나 할때 유용하다. ngClass, ngStyle이 존재한다.
+
+```javascript
+<div [ngClass]="myCls">테스트</div>
+``` 
+
+## 5.3 파이프(|)
+
+파이프는 뷰에 노출할 데이터를 변환하거나 가공할때 사용한다.
+
+### 5.3.1 파이프 커스텀
+
+파이프는 내맘대로 만들 수 있다.
+
+```javascript
+@Pipe({ name: 'geekMark' })
+export class GeekMarkerPipe implements PipeTransform {
+  transform(value: string, type: string): string {
+    switch (value) {
+      case 'A':
+        return `Good A : ${value} `;
+      case 'B':
+        return `Normal B : ${value} `;
+      case 'C':
+        return `Bad C : ${value} `;
+    }
+  }
+}
+
+
+// 사용예 파이프에 추가 인자를 넘겨주는 것은 :를 사용한다.
+// {{name | geekMark:'A'}}
+```
+
+## 5.4 정리
+
+* 뷰를 컴포넌트 단위로 설계하고 구현한다.
+* 컴포넌트는 반드시 뷰를 지칭하는 template를 가지고 있다.
+* @Component 데코레이터에 메타데이터를 선언하면 컴포넌트를 만들수 있다.
+* 컴포넌트는 반드시 모듈에 등록해야 사용이 가능하다.
+* 컴포넌트들이 모여서 컴포넌트 트리가 만들어진다.
+* 템플릿은 표준 HTML과 앵귤러 고유의 문법으로 작성하고 렌더링된다.
+* 여러 지시자들을 통해서 뷰와 컴포넌트 간의 관계를 만든다.
+* 파이프를 통해서 원하는 데이터 형태로 데이터를 보여줄수 있다.
+* 파이프나 지시자는 커스텀이 가능하다.
+
+# 6. 멋지게 사용하기 위해서 알아야 할 것
+
+좀더 복잡한 로직들을 이쁘게 처리하기 위해서 몇몇가지를 더 알아보자.
+
+## 6.1 서비스
+
+순수한 비지니스 로직이나 값을 다루는 클래스.
+
+서비스는 필수로 붙이는 데코레이터가 없지만 Injectable이라는 데코레이터를 붙이는 것을 권장하고 있다.
+
+## 6.2 의존성 주입
+
+NgModule의 providers에 서비스를 선언하고 해당 서비스를 사용하는 컴포넌트의 생성자자의 파라메터에 선언을 해주면 앵귤러 의존성 주입기가 컴포넌트를 생성시 생성자의 인자로 provider에서 선언한 값을 주입해준다.
+
+```javascript
+@NgModule({
+  ...
+  providers: [MyDefaultLoggerService],
+  ...
+})
+
+...
+export class MouseTrakingAreaComponent implements OnInit {
+  logLevel: LogLevel = LogLevel.INFO;
+
+  constructor(private logger: MyDefaultLoggerService) { // 주입
+  }
+  ...
+}
+```
+
+### 6.2.1 @Injectable, @Inject
+
+의존성 주입기는 @injectable 여부로 인스턴스를 생성시 생성자로 인해 의존성을 주입해 줄 필요가 잇는지 체크한다. 
+
+의존성 주입시 관련 파라메터들은 Class형태는 자동 추론하지만 열거형이나 기본형은 추론하지 못하니 @Inject를 설정한다.
+ 
+### 6.2.2 providers
+
+NgModule에 선언한 서비스가 어떤 인자를 받는지 설정할 수 있다. provide는 @Inject('logLevel')은 컴포넌트등에서 생성자로 선언한 파라메터 인자부분이다 이 파라메터의 값과 provide값이 매칭이 되면 해당 인자를 useValue값으로 넣는다.
+
+
+```javascript
+ providers: [MyDefaultLoggerService, {provide: 'logLevel', useValue: LogLevel.INFO}]
+```
+
+그러나 문자열로 키를 잡는것은 중복이 날수 있으니 위험하며 만약 중복시 마지막으로 설정한 값을 넣어준다. 그래서 보통 이런 문제를 해결하기 위해서 InjectionToken을 사용한다. 이것은 임의의 값을 생성한다.
+
+자식 컴포넌트는 최상위 Root모듈인 app.module까지 providers에 선언된 서비스를 찾는다. 만약 상위 컴포넌트의 의존성 주입 정보를 사용하지 않을 경우 @Host와 @Optional을 사용할 수 있다.
+
+@Host는 현재 컴포넌트의 의존성 주입 정보를 찾아서 넣으라는 것이고 @Optional은 현재 컴포넌트의 의존성 정보가 없을경우 의존성 주입을 받지 않아도 된다는 의미이다.
+
+```javascript
+...
+constructor(
+    @Host() myserviceX: MyServiceX,
+    @Host() Optional() myserviceY: MyServiceY,
+)
+...
+```
+
+# 7. 컴포넌트 고급
+
+Angular4에서 컴포넌트는 독립된 Style이나 스코프를 갖는다. 잘 생각해보자 결국 컴포넌트의 조합된 HTLM이 통으로 보여주는건데 어덯게 그렇게 되는것일까? 렌더링시에 Angular가 HTML 태그에 임의의 값을 넣고 그 값을 CSS 컴파일 시점에 넣어서 컴포넌트별로 각각의 CSS를 먹게 할 수 있는 것이다.
+
+HTML표준에도 Web Compoent라는 표준이 잇는데 표준의 Shadow Dom을 통해서 비슷한 기능을 만들 수 있다. 하지만 이것은 이것을 지원해주는 브라우저 박에 사용을 못한다.
+
+## 7.1 Web Component를 Angular컴포넌트에서 쓰기
+
+Web Component를 사용하고 싶으면 @Component에 encapsulation으로 ViewEncapsulation.Native옵션을 주면 된다.
+
+```javascript
+@component({
+...
+encapsulation: ViewEncapsulation.Native
+})
+```
+
+## 7.2 컴포넌트 공유와 이벤트 전파
+
+### 7.2.1 @Input와 프로퍼티 바인딩
+
+부모에서 자식에게 데이터를 줌, 자식에서 값을 변경해도 부모에 반영 안됨
+
+```javascript
+<child-area [cflag]="myflag" [dflag]="goodFlag"></child-area>
+...
+export Class ChildAreaComponent() {
+    @Input() cflag;
+    @Input() dflag;
+    ...
+}
+```
+
+### 7.2.2 @Output 사용한 이벤트 바인딩
+
+
+
+
+
+
+
+

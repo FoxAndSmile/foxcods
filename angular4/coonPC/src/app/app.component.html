@@ -1,0 +1,31 @@
+<h3>부모</h3>
+<p>
+  A TEXT
+  <input id="atext" name="atext" type="text" [(ngModel)]="aText" #text/>
+</p>
+<p>
+  B TEXT
+  <input id="btext" name="btext" type="text" [(ngModel)]="bText" ref-text/>
+</p>
+<p>
+  C TEXT
+  <!-- 선언된 템플릿안에서라면 템플릿변수는 @ViewChild같은 데코레이션 없이 사용이 가능하다. 또한 동일한 템플릿 변수가 존재시에 마지막것을 사용한다.-->
+  <input type="text" #textc (keyup)="upKeyGo3($event,textc.value)"/>
+</p>
+<p>
+  Share Text Data
+  <input type="text" [(ngModel)]="shareText" />
+</p>
+<button> child1 값 전달 </button>
+<button (click)="clickShareText()"> ShareText 값 전달 </button>
+<button (click)="callPublic()">Public</button>
+<button (click)="callPrivate()">Private</button>
+<button (click)="testTemplateVal()">Test templateVal</button>
+
+<br /><br />
+
+<h3>자식</h3>
+<app-child1 [myState]="myState" [myName]="myName" [memSize]="memSize" [aText]="aText" [bText]="bText" (onEmptyText)="emptyText($event)">
+  <h4>APPEND CHILD COMPONENT</h4>
+  <app-child2></app-child2>
+</app-child1>

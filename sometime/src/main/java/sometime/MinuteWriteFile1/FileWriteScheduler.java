@@ -35,7 +35,7 @@ public class FileWriteScheduler {
         cal.setTime(new Date()) ;
         cal.add(Calendar.MINUTE, -1);
 
-        PrintWriter pw = new PrintWriter(writeFilePath + "\\" + dateFormat.format(cal.getTime()) + ".json");
+        PrintWriter pw = new PrintWriter(writeFilePath + "\\" + "AD-exchange-01_" + dateFormat.format(cal.getTime()) + ".traffic");
         pw.println(json);
         pw.close();
     }
